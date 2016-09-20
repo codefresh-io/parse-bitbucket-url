@@ -1,7 +1,7 @@
 {
     "name": "parse-bitbucket-url",
     "description": "Parse a Bitbucket URL into an object.",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "homepage": "https://github.com/advance512/parse-bitbucket-url",
     "author": "Alon Diamant (https://github.com/advance512)",
     "repository": "advance512/parse-bitbucket-url",

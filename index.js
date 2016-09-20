@@ -1,5 +1,5 @@
 /*!
- * parse-bitbucket-url <https://bitbucket.org/jonschlinkert/parse-bitbucket-url>
+ * parse-bitbucket-url <https://bitbucket.org/advance512/parse-bitbucket-url>
  *
  * Copyright (c) 2016, Alon Diamant.
  * Licensed under the MIT License.

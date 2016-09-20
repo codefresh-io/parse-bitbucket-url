@@ -340,6 +340,10 @@ Generated results from test fixtures:
 
 ## History
 
+**v0.1.1**
+
+First published version.
+
 **v0.1.0**
 
 Basic version, based on parse-github-url.
@@ -361,7 +365,7 @@ You might also be interested in these projects:
 
 ## Contributing
 
-Pull requests and stars are always welcome. For bugs and feature requests, [please create an issue](https://bitbucket.org/jonschlinkert/parse-bitbucket-url/issues/new).
+Pull requests and stars are always welcome. For bugs and feature requests, [please create an issue](https://bitbucket.org/advance512/parse-bitbucket-url/issues/new).
 
 ## Building docs
 
