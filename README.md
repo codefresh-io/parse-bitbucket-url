@@ -1,3 +1,15 @@
+# parse-bitbucket-url [![NPM version](https://img.shields.io/npm/v/parse-bitbucket-url.svg?style=flat)](https://www.npmjs.com/package/parse-bitbucket-url) [![NPM downloads](https://img.shields.io/npm/dm/parse-bitbucket-url.svg?style=flat)](https://npmjs.org/package/parse-bitbucket-url) [![Build Status](https://img.shields.io/travis/advance512/parse-bitbucket-url.svg?style=flat)](https://travis-ci.org/advance512/parse-bitbucket-url)
+
+> Parse a Bitbucket URL into an object.
+
+## Install
+
+Install with [npm](https://www.npmjs.com/):
+
+```sh
+$ npm install parse-bitbucket-url --save
+```
+
 See the [release history](#history) for details.
 
 **Why a Bitbucket URL parser library?**
