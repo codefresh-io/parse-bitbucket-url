@@ -1,0 +1,64 @@
+{
+    "name": "parse-bitbucket-url",
+    "description": "Parse a Bitbucket URL into an object.",
+    "version": "0.1.0",
+    "homepage": "https://github.com/advance512/parse-bitbucket-url",
+    "author": "Alon Diamant (https://github.com/advance512)",
+    "repository": "advance512/parse-bitbucket-url",
+    "bugs": {
+        "url": "https://github.com/advance512/parse-bitbucket-url/issues"
+    },
+    "license": "MIT",
+    "files": [
+        "index.js"
+    ],
+    "main": "index.js",
+    "engines": {
+        "node": ">=0.10.0"
+    },
+    "scripts": {
+        "test": "mocha"
+    },
+    "devDependencies": {
+        "gulp-format-md": "^0.1.7",
+        "mocha": "^2.4.5"
+    },
+    "keywords": [
+        "bitbucket",
+        "branch",
+        "git",
+        "github",
+        "match",
+        "parse",
+        "regex",
+        "repo",
+        "test",
+        "url",
+        "user",
+        "username"
+    ],
+    "verb": {
+        "plugins": [
+            "gulp-format-md"
+        ],
+        "related": {
+            "list": [
+                "parse-github-url",
+                "github-short-url-regex",
+                "is-git-url",
+                "parse-github-short-url"
+            ]
+        },
+        "toc": false,
+        "lint": {
+            "reflinks": true
+        },
+        "layout": "default",
+        "tasks": [
+            "readme"
+        ],
+        "reflinks": [
+            "verb"
+        ]
+    }
+}
