@@ -1,7 +1,7 @@
 /*!
  * parse-bitbucket-url <https://bitbucket.org/advance512/parse-bitbucket-url>
  *
- * Copyright (c) 2016, Alon Diamant.
+ * Copyright (c) 2016, Codefresh, Inc.
  * Licensed under the MIT License.
  */
 
