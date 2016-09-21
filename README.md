@@ -16,14 +16,14 @@ See the [release history](#history) for details.
 
 **Why a Bitbucket URL parser library?**
 
-Cuz I needed it. And I really liked parse-github-url's simplicity. So now you have this. Have fun.
+Cuz I needed it. And I really liked [parse-github-url](https://www.npmjs.com/package/parse-github-url)'s simplicity. So now you have this. Have fun.
 
-(`parse-vcs-url` you say? nahhh, that's way too few `require`s) 
+(Why not `parse-vcs-url` you say? nahhh, that's way too few `require` statements) 
 
 ## Usage
 
 ```js
-let parseBitbucketUrl = require('{%= name %}');
+let parseBitbucketUrl = require('parse-bitbucket-url');
 parseBitbucketUrl('https://bitbucket.org/jespern/django-piston');
 ```
 
