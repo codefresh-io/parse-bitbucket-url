@@ -20,7 +20,7 @@ function parse(str) {
   }
 
   // No snippets for us
-  if (str.indexOf('bitbucket.org/snippets') !== -1) {
+  if (str.indexOf('bitbucket.org/snippets') !== -1 || str.indexOf('bitbucket.com/snippets') !== -1) {
     return null;
   }
 
@@ -32,12 +32,53 @@ function parse(str) {
   obj.path = trimSlash(obj.path);
   obj.pathname = trimSlash(obj.pathname);
 
-  var seg = obj.path.split('/').filter(Boolean);
+  // Get the segments from the path
+  var pathSegments = obj.path.split('/').filter(Boolean);
 
-  obj.owner = owner(seg[0]);
-  obj.name = name(seg[1]);
+  // Stash, aka Bitbucket Server. https://www.atlassian.com/software/bitbucket/server
+  // We look for a git@ URL not pointing at bitbucket.org/bitbucket.com, or for a HTTP/HTTPS URL that isn't pointing to
+  // bitbucket.com/bitbucket.org and that has a path that starts with /projects/
+  var stashDetected =
+    (str.indexOf('git@') !== -1 && str.indexOf('git@bitbucket.org') === -1 && str.indexOf('git@bitbucket.com') === -1)
+    ||
+    (obj.hostname &&
+     !(obj.hostname.endsWith('bitbucket.org') || obj.hostname.endsWith('bitbucket.com')) &&
+     pathSegments[0] === 'projects');
 
-  if (seg.length > 1 && obj.owner && obj.name) {
+  // TODO: This is too spaghetti.. rewrite this to be understandable, separate Bitbucket Server/Bitbucket Cloud paths,
+  // SSH/git paths, etc
+  if (stashDetected) {
+    // Stash mode
+    if (str.indexOf('git@') === -1) {
+
+      if (pathSegments.length > 1) {
+        obj.owner = owner(pathSegments[1]);
+      } else {
+        obj.owner = null;
+      }
+
+      if (pathSegments.length > 3 && pathSegments[2] === 'repos') {
+        obj.name = name(pathSegments[3]);
+      } else {
+        obj.name = null;
+      }
+    } else {
+      if (pathSegments.length === 3) {
+        obj.host = pathSegments[0].replace('git@', '');
+        obj.owner = owner(pathSegments[1]);
+        obj.name = name(pathSegments[2]);
+      } else {
+        obj.owner = owner(pathSegments[0]);
+        obj.name = name(pathSegments[1]);
+      }
+    }
+  } else {
+    // Bitbucket mode
+    obj.owner = owner(pathSegments[0]);
+    obj.name = name(pathSegments[1]);
+  }
+
+  if (pathSegments.length > 1 && obj.owner && obj.name) {
     obj.repo = obj.owner + '/' + obj.name;
   } else {
     var href = obj.href.split(':');
@@ -47,7 +88,9 @@ function parse(str) {
       obj.owner = repoSegments[0];
       obj.name = repoSegments[1];
 
-    } else {
+    } else if (obj.hasOwnProperty('owner') === false) {
+
+      // Having the property means - we're sure.
       var match = obj.href.match(/\/([^\/]*)$/);
       obj.owner = match ? match[1] : null;
       obj.repo = null;
@@ -62,19 +105,19 @@ function parse(str) {
     }
   }
 
-  if (seg.length >= 3 && seg[2] === 'get') {
+  if (pathSegments.length >= 3 && pathSegments[2] === 'get') {
     // Look at seg[3] for a file name, which will be the branch/tag name
     // NOTE: tags and branches are treated alike in Bitbucket and cannot be distinguished by URL.
     // We'll treat everything like branches.
     var fileName = null;
-    if (seg[3].endsWith('.tar.gz')) {
-      fileName = seg[3].replace('.tar.gz', '');
+    if (pathSegments[3].endsWith('.tar.gz')) {
+      fileName = pathSegments[3].replace('.tar.gz', '');
     }
-    if (seg[3].endsWith('.tar.bz2')) {
-      fileName = seg[3].replace('.tar.bz2', '');
+    if (pathSegments[3].endsWith('.tar.bz2')) {
+      fileName = pathSegments[3].replace('.tar.bz2', '');
     }
-    if (seg[3].endsWith('.zip')) {
-      fileName = seg[3].replace('.zip', '');
+    if (pathSegments[3].endsWith('.zip')) {
+      fileName = pathSegments[3].replace('.zip', '');
     }
     obj.branch = fileName;
 
@@ -84,7 +127,7 @@ function parse(str) {
     }
   }
 
-  obj.branch = obj.branch || getBranch(obj);
+  obj.branch = obj.branch || getBranch(obj, stashDetected);
   var res = {};
   res.host = obj.host || 'bitbucket.org';
   res.owner = obj.owner || null;
@@ -92,6 +135,8 @@ function parse(str) {
   res.repo = obj.repo;
   res.repository = res.repo;
   res.branch = obj.branch;
+
+  // TODO: Consider splitting host to host:port (add obj.port) in case of Stash
   return res;
 }
 
@@ -100,7 +145,7 @@ function parse(str) {
 //   return /^[a-f0-9]{40}$/i.test(str);
 // }
 
-function getBranch(obj) {
+function getBranch(obj, stashMode) {
   var branch;
   var segs = obj.path.split('#');
   if (segs.length !== 1) {
@@ -111,6 +156,9 @@ function getBranch(obj) {
   }
   if (!branch && obj.query && obj.query.at) {
     branch = obj.query.at;
+    if (branch && stashMode) {
+      branch = branch.replace('refs/heads/', '');
+    }
   }
 
   return branch || 'master';
@@ -121,6 +169,7 @@ function trimSlash(path) {
 }
 
 function name(str) {
+  // Remove non alphanumeric chars, and .git
   return str ? str.replace(/^\W+|\.git$/g, '') : null;
 }
 

@@ -4,7 +4,7 @@ require('mocha');
 var assert = require('assert');
 var bb = require('./');
 
-describe('parse-github-url', function() {
+describe('parse-bitbucket-url', function() {
   it('should get the user:', function() {
     assert.equal(bb(''), null);
     assert.equal(bb('https://bitbucket.org/jespern/django-piston').owner, 'jespern');
@@ -33,6 +33,7 @@ describe('parse-github-url', function() {
     assert.equal(bb('https://birkenfeld@bitbucket.org/birkenfeld/sphinx.git').owner, 'birkenfeld');
     assert.equal(bb('https://birkenfeld@bitbucket.org/birkenfeld/sphinx').owner, 'birkenfeld');
     assert.equal(bb('http://bitbucket.org/snippets/whatever'), null);
+    assert.equal(bb('http://bitbucket.com/snippets/whatever'), null);
     assert.equal(bb('https://bitbucket.org/snippets/CFTestBB/koex4'), null);
     assert.equal(bb('https://bitbucket.org/birkenfeld/sphinx').owner, 'birkenfeld');
     assert.equal(bb('https://bitbucket.org/birkenfeld/sphinx.git').owner, 'birkenfeld');
@@ -173,7 +174,7 @@ describe('parse-github-url', function() {
     assert.equal(bb('https://bitbucket.org/birkenfeld/sphinx/get/tip.zip').branch, 'master');
     assert.equal(bb('https://bitbucket.org/birkenfeld/sphinx/get/1.0b2.tar.bz2').branch, '1.0b2');
     // Note: This just show you how it is impossible to find out what branch a commit is part of in Bitbucket.
-    // The link says "at=stable" yet the actual branch is wp-pygments-syn. So, for now, we'll just play dumb and
+    // The link says 'at=stable' yet the actual branch is wp-pygments-syn. So, for now, we'll just play dumb and
     // imagine that at= always works and isn't just cosmetic as some screens.
     assert.equal(bb('https://bitbucket.org/nagy12/sphinx-3/commits/3acf7fd924820127947edb59dcfdc3ad7700afab?at=stable').branch, 'stable');
     assert.equal(bb('https://bitbucket.org/birkenfeld/sphinx/src/17af190a72e157f767e30a284f49bdcd2b5a3689?at=0.1.61611').branch, '0.1.61611');
@@ -194,5 +195,54 @@ describe('parse-github-url', function() {
     assert.equal(bb('https://bitbucket.org/birkenfeld/sphinx').branch, 'master');
     assert.equal(bb('https://bitbucket.org/birkenfeld/sphinx/src/17af190a72e157f767e30a284f49bdcd2b5a3689').branch, 'master');
     assert.equal(bb('https://bitbucket.org/birkenfeld/sphinx/src/40bd03003ac6fe274ccf3c80d7727509e00a69ea/AUTHORS').branch, 'master');
+  });
+
+  it('should work with Bitbucket Server URLs:', function() {
+    assert.equal(bb('https://stash.one.two/projects/KEY/repos/name1/browse').owner, 'KEY');
+    assert.equal(bb('https://stash.one.two/projects/ONE/repos/name2/browse').owner, 'ONE');
+    assert.equal(bb('https://stash.one.two/projects/ABC/repos/name3/commits/a1aa8e5c5b99002396d449c1bdd4d6946303bbc3').name, 'name3');
+    assert.equal(bb('https://stash.one.two/projects/DEF/repos/na-me4/commits').name, 'na-me4');
+    assert.equal(bb('https://bitbucketserver.one.two/projects/GHI/repos/name5/compare/commits?sourceBranch=refs%2Fheads%2Fmaster&targetBranch=refs%2Fheads%2Fbugfix%2Fdevelop').repo, 'GHI/name5');
+    assert.equal(bb('https://stash.one.two/projects/JKL/repos/nam-e6/branches').repo, 'JKL/nam-e6');
+    assert.equal(bb('https://internal.one.two:2034/projects/MNOPQ/repos/name7/pull-requests').host, 'internal.one.two:2034');
+    assert.equal(bb('https://stash-internal.my.company:3333/projects/KEY/repos/name1/browse/README.md?at=refs%2Fheads%2Fbranch333').host, 'stash-internal.my.company:3333');
+    assert.equal(bb('https://advance512@stash-internal.my.company/scm/a-key/a-project.git').branch, 'master');
+    assert.equal(bb('https://stash-internal.my.company:3333/projects/KEY/repos/name1/browse/README.md?at=refs%2Fheads%2Fbranch333').branch, 'branch333');
+    assert.equal(bb('https://stash.one.two/projects/KEY').owner, 'KEY');
+    assert.equal(bb('https://stash.one.two/projects/KEY').name, null);
+    assert.equal(bb('https://stash.one.two/projects/KEY').repo, null);
+    assert.equal(bb('https://stash.one.two/projects/KEY/repos').owner, 'KEY');
+    assert.equal(bb('https://stash.one.two/projects/KEY/repos/').name, null);
+    assert.equal(bb('https://stash.one.two/projects/KEY/repos/').repo, null);
+
+    assert.equal(bb('ssh://git@stash-internal.some.io/cod/more-proj.git').owner, 'cod');
+    assert.equal(bb('ssh://git@stash-internal.some.io:7999/cod/more-proj.git').owner, 'cod');
+    assert.equal(bb('git@bb-internal.lies.io/tfc/some-proj.git').owner, 'tfc');
+    assert.equal(bb('git@bb-internal.lies.io:27999/tfc/some-proj.git').name, 'some-proj');
+    assert.equal(bb('git@bb-internal.lies.io:27999/tfc/some-proj.git#0.2.3').host, 'bb-internal.lies.io:27999');
+    assert.equal(bb('git@bb-internal.lies.io:27999/tfc/some-proj.git#0.2.3').branch, '0.2.3');
+
+    // Thorough tests of git URLs
+    assert.equal(bb('ssh://git@stash-internal.some.io:7999/cod/more-proj.git#someBranch').owner, 'cod');
+    assert.equal(bb('ssh://git@stash-internal.some.io:7999/cod/more-proj.git#someBranch').name, 'more-proj');
+    assert.equal(bb('ssh://git@stash-internal.some.io:7999/cod/more-proj.git#someBranch').host, 'stash-internal.some.io:7999');
+    assert.equal(bb('ssh://git@stash-internal.some.io:7999/cod/more-proj.git#someBranch').branch, 'someBranch');
+    assert.equal(bb('ssh://git@stash-internal.some.io:7999/cod/more-proj.git#someBranch').repo, 'cod/more-proj');
+    assert.equal(bb('ssh://git@stash-internal.some.io/cod/more-proj.git#someBranch').owner, 'cod');
+    assert.equal(bb('ssh://git@stash-internal.some.io/cod/more-proj.git#someBranch').name, 'more-proj');
+    assert.equal(bb('ssh://git@stash-internal.some.io/cod/more-proj.git#someBranch').host, 'stash-internal.some.io');
+    assert.equal(bb('ssh://git@stash-internal.some.io/cod/more-proj.git#someBranch').branch, 'someBranch');
+    assert.equal(bb('ssh://git@stash-internal.some.io/cod/more-proj.git#someBranch').repo, 'cod/more-proj');
+
+    assert.equal(bb('git@stash-internal.some.io:7999/cod/more-proj.git#someBranch').owner, 'cod');
+    assert.equal(bb('git@stash-internal.some.io:7999/cod/more-proj.git#someBranch').name, 'more-proj');
+    assert.equal(bb('git@stash-internal.some.io:7999/cod/more-proj.git#someBranch').host, 'stash-internal.some.io:7999');
+    assert.equal(bb('git@stash-internal.some.io:7999/cod/more-proj.git#someBranch').branch, 'someBranch');
+    assert.equal(bb('git@stash-internal.some.io:7999/cod/more-proj.git#someBranch').repo, 'cod/more-proj');
+    assert.equal(bb('git@stash-internal.some.io/cod/more-proj.git#someBranch').owner, 'cod');
+    assert.equal(bb('git@stash-internal.some.io/cod/more-proj.git#someBranch').name, 'more-proj');
+    assert.equal(bb('git@stash-internal.some.io/cod/more-proj.git#someBranch').host, 'stash-internal.some.io');
+    assert.equal(bb('git@stash-internal.some.io/cod/more-proj.git#someBranch').branch, 'someBranch');
+    assert.equal(bb('git@stash-internal.some.io/cod/more-proj.git#someBranch').repo, 'cod/more-proj');
   });
 });

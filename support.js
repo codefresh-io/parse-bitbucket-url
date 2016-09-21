@@ -42,7 +42,20 @@ var formats = [
   'https://bitbucket.org/birkenfeld/sphinx/get/40bd03003ac6.zip',
   'https://bitbucket.org/birkenfeld/sphinx/get/tip.zip',
   'https://bitbucket.org/birkenfeld/sphinx/get/1.0b2.tar.bz2',
-  'https://bitbucket.org/birkenfeld/sphinx/get/stable.tar.gz'
+  'https://bitbucket.org/birkenfeld/sphinx/get/stable.tar.gz',
+  'https://stash.one.two/projects/KEY/repos/name1/browse',
+  'https://stash.one.two/projects/ONE/repos/name2/browse',
+  'https://stash.one.two/projects/ABC/repos/name3/commits/a1aa8e5c5b99002396d449c1bdd4d6946303bbc3',
+  'https://stash.one.two/projects/DEF/repos/na-me4/commits',
+  'https://bitbucketserver.one.two/projects/GHI/repos/name5/compare/commits?sourceBranch=refs%2Fheads%2Fmaster&targetBranch=refs%2Fheads%2Fbugfix%2Fdevelop',
+  'https://stash.one.two/projects/JKL/repos/nam-e6/branches',
+  'https://internal.one.two:2034/projects/MNOPQ/repos/name7/pull-requests',
+  'https://stash.one.two:5555/projects/KEY/repos/name1/browse/README.md?at=refs%2Fheads%2Fbranch333',
+  'https://alond@stash-internal.my.company/scm/a-key/a-project.git',
+  'https://alond@stash-internal.my.company:3333/scm/a-key/another-project',
+  'ssh://git@stash-internal.some.io:7999/cod/more-proj.git',
+  'git@bb-internal.lies.io:27999/tfc/some-proj.git',
+  'git@bb-internal.lies.io:27999/tfc/some-proj.git#0.2.3'
 ];
 
 module.exports = function() {
