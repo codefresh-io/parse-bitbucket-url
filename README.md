@@ -1,4 +1,4 @@
-# parse-bitbucket-url [![NPM version](https://img.shields.io/npm/v/parse-bitbucket-url.svg?style=flat)](https://www.npmjs.com/package/parse-bitbucket-url) [![NPM downloads](https://img.shields.io/npm/dm/parse-bitbucket-url.svg?style=flat)](https://npmjs.org/package/parse-bitbucket-url) [![Build Status](https://img.shields.io/travis/advance512/parse-bitbucket-url.svg?style=flat)](https://travis-ci.org/advance512/parse-bitbucket-url)
+# parse-bitbucket-url [![NPM version](https://img.shields.io/npm/v/parse-bitbucket-url.svg?style=flat)](https://www.npmjs.com/package/parse-bitbucket-url) [![NPM downloads](https://img.shields.io/npm/dm/parse-bitbucket-url.svg?style=flat)](https://npmjs.org/package/parse-bitbucket-url) [![Build Status](https://img.shields.io/travis/codefresh-io/parse-bitbucket-url.svg?style=flat)](https://travis-ci.org/codefresh-io/parse-bitbucket-url)
 
 > Parse a Bitbucket URL into an object. Supports Bitbucket Server (formely known as Stash) URLs as well.
 
@@ -491,7 +491,7 @@ You might also be interested in these projects:
 
 ## Contributing
 
-Pull requests and stars are always welcome. For bugs and feature requests, [please create an issue](https://bitbucket.org/advance512/parse-bitbucket-url/issues/new).
+Pull requests and stars are always welcome. For bugs and feature requests, [please create an issue](https://github.com/codefresh-io/parse-bitbucket-url/issues/new).
 
 ## Running tests
 
@@ -516,7 +516,7 @@ Heavily based on parse-github-url by **Jon Schlinkert (jonschlinkert)**.
 ## License
 
 Copyright © 2016, [Codefresh](https://codefresh.io).
-Released under the [MIT license](https://github.com/advance512/parse-bitbucket-url/blob/master/LICENSE).
+Released under the [MIT license](https://github.com/codefresh-io/parse-bitbucket-url/blob/master/LICENSE).
 
 ***
 
