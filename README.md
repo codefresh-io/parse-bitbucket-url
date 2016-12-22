@@ -462,6 +462,10 @@ Generated results from test fixtures:
 
 ## History
 
+**v0.3.0**
+
+Support file location for URLs that have one
+
 **v0.2.0**
 
 Added support for Bitbucket Server / Stash.
