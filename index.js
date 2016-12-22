@@ -105,7 +105,7 @@ function parse(str) {
     }
   }
 
-  if (pathSegments.length >= 3 && pathSegments[2] === 'get') {
+  if (pathSegments.length >= 3) {
     switch(pathSegments[2]){
       case 'get':
         // Look at seg[3] for a file name, which will be the branch/tag name
@@ -130,11 +130,11 @@ function parse(str) {
         break;
       case 'raw'://support file location. Bitbucket support two file modes:raw and src. This is only for bitbuket and not Bitbucket Server
       case 'src':
-            if(pathSegments.length < 6){
+            if(pathSegments.length < 5){
                 //no file location
                 break;
             }
-            var filepath = pathSegments.slice(5);
+            var filepath = pathSegments.slice(4);
             if(filepath.length){
                 var file = filepath[filepath.length - 1];
                 file = file.split('?')[0]; //remove the query params
