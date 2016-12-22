@@ -128,10 +128,10 @@ function parse(str) {
           obj.branch = undefined;
         }
         break;
-      case 'raw'://support file location. Bitbucket support two file modes:raw and src. This is only for bitbuket and not Bitbucket Server
-      case 'src':
+      case 'raw':// support file location. Bitbucket support two file modes:raw and src. This is only for bitbuket and not Bitbucket Server
+      case 'src':// todo: support bitbucket server file location
             if(pathSegments.length < 5){
-                //no file location
+                // no file location
                 break;
             }
             var filepath = pathSegments.slice(4);
