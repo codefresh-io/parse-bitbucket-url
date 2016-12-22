@@ -182,8 +182,32 @@ describe('parse-bitbucket-url', function() {
     assert.equal(bb('https://bitbucket.org/birkenfeld/sphinx/src/6affb32647b1f762ebe40f5dac175e7aa7a15f09/utils/pylintrc?at=stable&fileviewer=file-view-default').branch, 'stable');
     assert.equal(bb('https://bitbucket.org/birkenfeld/sphinx/src/17af190a72e157f767e30a284f49bdcd2b5a3689/utils/pylintrc?at=feature/branch/magic&fileviewer=file-view-default').branch, 'feature/branch/magic');
     assert.equal(bb('https://bitbucket.org/birkenfeld/sphinx/src/249b21a86400b38969cee3d5df6d2edf8813c137?at=master/foo/bar').branch, 'master/foo/bar');
+    assert.equal(bb('https://bitbucket.org/birkenfeld/sphinx/src/6affb32647b1f762ebe40f5dac175e7aa7a15f09/tests/coverage.py?at=stable&fileviewer=file-view-default').branch, 'stable');
 
   });
+
+  it('should get the filepath:', function() {
+    assert.equal(bb('birkenfeld/sphinx#branch').filepath, null);
+    assert.equal(bb('birkenfeld/sphinx#dev').filepath, null);
+    assert.equal(bb('git@bitbucket.org:birkenfeld/sphinx.git#stable').filepath, null);
+    assert.equal(bb('git@bitbucket.org:birkenfeld/sphinx.git#default').filepath, null);
+    assert.equal(bb('hg@bitbucket.org:birkenfeld/sphinx.git#stable').filepath, null);
+    assert.equal(bb('hg@bitbucket.org:birkenfeld/sphinx.git#default').filepath, null);
+    assert.equal(bb('https://bitbucket.org/birkenfeld/sphinx/get/default.tar.bz2').filepath, null);
+    assert.equal(bb('https://bitbucket.org/birkenfeld/sphinx/get/stable.tar.gz').filepath, null);
+    assert.equal(bb('https://bitbucket.org/birkenfeld/sphinx/get/develop.zip').filepath, null);
+    assert.equal(bb('https://bitbucket.org/birkenfeld/sphinx/get/40bd03003ac6.zip').filepath, null);
+    assert.equal(bb('https://bitbucket.org/birkenfeld/sphinx/get/tip.zip').filepath, null);
+    assert.equal(bb('https://bitbucket.org/birkenfeld/sphinx/get/1.0b2.tar.bz2').filepath, null);
+    assert.equal(bb('https://bitbucket.org/nagy12/sphinx-3/commits/3acf7fd924820127947edb59dcfdc3ad7700afab?at=stable').filepath, null);
+    assert.equal(bb('https://bitbucket.org/birkenfeld/sphinx/src/6affb32647b1f762ebe40f5dac175e7aa7a15f09/tests/coverage.py?at=stable&fileviewer=file-view-default').filepath, 'tests/coverage.py');
+    assert.equal(bb('https://bitbucket.org/birkenfeld/sphinx/src/40bd03003ac6fe274ccf3c80d7727509e00a69ea/AUTHORS?at=tip&fileviewer=file-view-default').filepath, 'AUTHORS');
+    assert.equal(bb('https://bitbucket.org/birkenfeld/sphinx/raw/6affb32647b1f762ebe40f5dac175e7aa7a15f09/tests/coverage.py').filepath, 'tests/coverage.py');
+
+  });
+
+
+
 
   it('should use master branch when another branch is not defined:', function() {
     assert.equal(bb('birkenfeld/sphinx').branch, 'master');

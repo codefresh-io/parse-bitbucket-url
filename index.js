@@ -105,26 +105,45 @@ function parse(str) {
     }
   }
 
-  if (pathSegments.length >= 3 && pathSegments[2] === 'get') {
-    // Look at seg[3] for a file name, which will be the branch/tag name
-    // NOTE: tags and branches are treated alike in Bitbucket and cannot be distinguished by URL.
-    // We'll treat everything like branches.
-    var fileName = null;
-    if (pathSegments[3].endsWith('.tar.gz')) {
-      fileName = pathSegments[3].replace('.tar.gz', '');
-    }
-    if (pathSegments[3].endsWith('.tar.bz2')) {
-      fileName = pathSegments[3].replace('.tar.bz2', '');
-    }
-    if (pathSegments[3].endsWith('.zip')) {
-      fileName = pathSegments[3].replace('.zip', '');
-    }
-    obj.branch = fileName;
+  if (pathSegments.length >= 3) {
+    switch(pathSegments[2]){
+      case 'get':
+        // Look at seg[3] for a file name, which will be the branch/tag name
+        // NOTE: tags and branches are treated alike in Bitbucket and cannot be distinguished by URL.
+        // We'll treat everything like branches.
+        var fileName = null;
+        if (pathSegments[3].endsWith('.tar.gz')) {
+          fileName = pathSegments[3].replace('.tar.gz', '');
+        }
+        if (pathSegments[3].endsWith('.tar.bz2')) {
+          fileName = pathSegments[3].replace('.tar.bz2', '');
+        }
+        if (pathSegments[3].endsWith('.zip')) {
+          fileName = pathSegments[3].replace('.zip', '');
+        }
+        obj.branch = fileName;
 
-    // tip is a keyword meaning HEAD. We don't know the actual branch in this case.
-    if (obj.branch === 'tip') {
-      obj.branch = undefined;
+        // tip is a keyword meaning HEAD. We don't know the actual branch in this case.
+        if (obj.branch === 'tip') {
+          obj.branch = undefined;
+        }
+        break;
+      case 'raw':// support file location. Bitbucket support two file modes:raw and src. This is only for bitbuket and not Bitbucket Server
+      case 'src':// todo: support bitbucket server file location
+            if(pathSegments.length < 5){
+                // no file location
+                break;
+            }
+            var filepath = pathSegments.slice(4);
+            if(filepath.length){
+                var file = filepath[filepath.length - 1];
+                file = file.split('?')[0]; //remove the query params
+                filepath[filepath.length - 1] = file;
+            }
+            obj.filepath = filepath.join('/');
+
     }
+
   }
 
   obj.branch = obj.branch || getBranch(obj, stashDetected);
@@ -135,6 +154,8 @@ function parse(str) {
   res.repo = obj.repo;
   res.repository = res.repo;
   res.branch = obj.branch;
+  res.filepath =  obj.filepath || null;
+    // TODO: support file path for bitbucket server (formally Stash)
 
   // TODO: Consider splitting host to host:port (add obj.port) in case of Stash
   return res;
