@@ -186,7 +186,7 @@ describe('parse-bitbucket-url', function() {
 
   });
 
-  it.only('should get the filepath:', function() {
+  it('should get the filepath:', function() {
     assert.equal(bb('birkenfeld/sphinx#branch').filepath, null);
     assert.equal(bb('birkenfeld/sphinx#dev').filepath, null);
     assert.equal(bb('git@bitbucket.org:birkenfeld/sphinx.git#stable').filepath, null);
