@@ -1,12 +1,12 @@
 {
     "name": "parse-bitbucket-url",
     "description": "Parse a Bitbucket URL into an object.",
-    "version": "0.2.0",
-    "homepage": "https://github.com/advance512/parse-bitbucket-url",
+    "version": "0.3.0",
+    "homepage": "https://github.com/codefresh-io/parse-bitbucket-url",
     "author": "Alon Diamant (https://github.com/advance512)",
-    "repository": "advance512/parse-bitbucket-url",
+    "repository": "codefresh-io/parse-bitbucket-url",
     "bugs": {
-        "url": "https://github.com/advance512/parse-bitbucket-url/issues"
+        "url": "https://github.com/codefresh-io/parse-bitbucket-url/issues"
     },
     "license": "MIT",
     "files": [
