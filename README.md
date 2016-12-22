@@ -1,4 +1,4 @@
-# parse-bitbucket-url [![NPM version](https://img.shields.io/npm/v/parse-bitbucket-url.svg?style=flat)](https://www.npmjs.com/package/parse-bitbucket-url) [![NPM downloads](https://img.shields.io/npm/dm/parse-bitbucket-url.svg?style=flat)](https://npmjs.org/package/parse-bitbucket-url) [![Build Status](https://img.shields.io/travis/codefresh-io/parse-bitbucket-url.svg?style=flat)](https://travis-ci.org/codefresh-io/parse-bitbucket-url)
+# parse-bitbucket-url [![NPM version](https://img.shields.io/npm/v/parse-bitbucket-url.svg?style=flat)](https://www.npmjs.com/package/parse-bitbucket-url) [![NPM downloads](https://img.shields.io/npm/dm/parse-bitbucket-url.svg?style=flat)](https://npmjs.org/package/parse-bitbucket-url) 
 
 > Parse a Bitbucket URL into an object. Supports Bitbucket Server (formely known as Stash) URLs as well.
 
