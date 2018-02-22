@@ -41,6 +41,8 @@ function parse(str) {
   var stashDetected =
     (str.indexOf('git@') !== -1 && str.indexOf('git@bitbucket.org') === -1 && str.indexOf('git@bitbucket.com') === -1)
     ||
+    pathSegments.length === 3 && pathSegments[0] === 'scm'
+    ||
     (obj.hostname &&
      !(obj.hostname.endsWith('bitbucket.org') || obj.hostname.endsWith('bitbucket.com')) &&
      pathSegments[0] === 'projects');
@@ -49,7 +51,7 @@ function parse(str) {
   // SSH/git paths, etc
   if (stashDetected) {
     // Stash mode
-    if (str.indexOf('git@') === -1) {
+    if (str.indexOf('git@') === -1 && pathSegments[0] !== 'scm') {
 
       if (pathSegments.length > 1) {
         obj.owner = owner(pathSegments[1]);
@@ -64,7 +66,9 @@ function parse(str) {
       }
     } else {
       if (pathSegments.length === 3) {
-        obj.host = pathSegments[0].replace('git@', '');
+        if (pathSegments[0] !== 'scm') {
+          obj.host = pathSegments[0].replace('git@', '');
+        }
         obj.owner = owner(pathSegments[1]);
         obj.name = name(pathSegments[2]);
       } else {

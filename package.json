@@ -1,7 +1,7 @@
 {
     "name": "parse-bitbucket-url",
     "description": "Parse a Bitbucket URL into an object.",
-    "version": "0.3.0",
+    "version": "0.3.1",
     "homepage": "https://github.com/codefresh-io/parse-bitbucket-url",
     "author": "Alon Diamant (https://github.com/advance512)",
     "repository": "codefresh-io/parse-bitbucket-url",

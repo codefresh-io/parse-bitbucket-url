@@ -268,5 +268,10 @@ describe('parse-bitbucket-url', function() {
     assert.equal(bb('git@stash-internal.some.io/cod/more-proj.git#someBranch').host, 'stash-internal.some.io');
     assert.equal(bb('git@stash-internal.some.io/cod/more-proj.git#someBranch').branch, 'someBranch');
     assert.equal(bb('git@stash-internal.some.io/cod/more-proj.git#someBranch').repo, 'cod/more-proj');
+
+    assert.equal(bb('https://itai@stash-internal.codefresh.io/scm/cod/more-proj.git').owner, 'cod');
+    assert.equal(bb('https://itai@stash-internal.codefresh.io/scm/cod/more-proj.git').name, 'more-proj');
+    assert.equal(bb('https://itai@stash-internal.codefresh.io/scm/cod/more-proj.git').host, 'stash-internal.codefresh.io');
+    assert.equal(bb('https://itai@stash-internal.codefresh.io/scm/cod/more-proj.git').repo, 'cod/more-proj');
   });
 });
