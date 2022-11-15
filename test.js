@@ -274,4 +274,30 @@ describe('parse-bitbucket-url', function() {
     assert.equal(bb('https://itai@stash-internal.codefresh.io/scm/cod/more-proj.git').host, 'stash-internal.codefresh.io');
     assert.equal(bb('https://itai@stash-internal.codefresh.io/scm/cod/more-proj.git').repo, 'cod/more-proj');
   });
+
+  it('should work with sub path Bitbucket Server URLs:', function() {
+    assert.equal(bb('https://stash.one.two/stashinstance/projects/KEY/repos/name1/browse').owner, 'KEY');
+    assert.equal(bb('https://stash.one.two/stashinstance/projects/ONE/repos/name2/browse').owner, 'ONE');
+    assert.equal(bb('https://stash.one.two/stashinstance/projects/ABC/repos/name3/commits/a1aa8e5c5b99002396d449c1bdd4d6946303bbc3').name, 'name3');
+    assert.equal(bb('https://stash.one.two/stashinstance/projects/DEF/repos/na-me4/commits').name, 'na-me4');
+    assert.equal(bb('https://bitbucketserver.one.two/stashinstance/projects/GHI/repos/name5/compare/commits?sourceBranch=refs%2Fheads%2Fmaster&targetBranch=refs%2Fheads%2Fbugfix%2Fdevelop').repo, 'GHI/name5');
+    assert.equal(bb('https://stash.one.two/stashinstance/projects/JKL/repos/nam-e6/branches').repo, 'JKL/nam-e6');
+    assert.equal(bb('https://internal.one.two:2034/stashinstance/projects/MNOPQ/repos/name7/pull-requests').host, 'internal.one.two:2034');
+    assert.equal(bb('https://stash-internal.my.company:3333/stashinstance/projects/KEY/repos/name1/browse/README.md?at=refs%2Fheads%2Fbranch333').host, 'stash-internal.my.company:3333');
+    assert.equal(bb('https://advance512@stash-internal.my.company/stashinstance/scm/a-key/a-project.git').branch, 'master');
+    assert.equal(bb('https://stash-internal.my.company:3333/stashinstance/projects/KEY/repos/name1/browse/README.md?at=refs%2Fheads%2Fbranch333').branch, 'branch333');
+    assert.equal(bb('https://stash.one.two/stashinstance/projects/KEY').owner, 'KEY');
+    assert.equal(bb('https://stash.one.two/stashinstance/projects/KEY').name, null);
+    assert.equal(bb('https://stash.one.two/stashinstance/projects/KEY').repo, null);
+    assert.equal(bb('https://stash.one.two/stashinstance/projects/KEY/repos').owner, 'KEY');
+    assert.equal(bb('https://stash.one.two/stashinstance/projects/KEY/repos/').name, null);
+    assert.equal(bb('https://stash.one.two/stashinstance/projects/KEY/repos/').repo, null);
+
+
+    assert.equal(bb('https://itai@stash-internal.codefresh.io/stashinstance/scm/cod/more-proj.git').owner, 'cod');
+    assert.equal(bb('https://itai@stash-internal.codefresh.io/stashinstance/scm/cod/more-proj.git').name, 'more-proj');
+    assert.equal(bb('https://itai@stash-internal.codefresh.io/stashinstance/scm/cod/more-proj.git').host, 'stash-internal.codefresh.io');
+    assert.equal(bb('https://itai@stash-internal.codefresh.io/stashinstance/scm/cod/more-proj.git').repo, 'cod/more-proj');
+
+  });
 });

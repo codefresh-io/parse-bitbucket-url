@@ -37,7 +37,7 @@ function parse(str) {
 
   // Stash, aka Bitbucket Server. https://www.atlassian.com/software/bitbucket/server
   // We look for a git@ URL not pointing at bitbucket.org/bitbucket.com, or for a HTTP/HTTPS URL that isn't pointing to
-  // bitbucket.com/bitbucket.org and that has a path that starts with /projects/
+  // bitbucket.com/bitbucket.org and that has a path that contains /projects/ or /scm/
   var stashDetected =
     (str.indexOf('git@') !== -1 && str.indexOf('git@bitbucket.org') === -1 && str.indexOf('git@bitbucket.com') === -1)
     ||
@@ -45,35 +45,44 @@ function parse(str) {
     ||
     (obj.hostname &&
      !(obj.hostname.endsWith('bitbucket.org') || obj.hostname.endsWith('bitbucket.com')) &&
-     pathSegments[0] === 'projects');
+     (pathSegments.includes('projects') || pathSegments.includes('scm')));
+
+  var stashPathOffset = 0;
+  if (stashDetected) {
+    stashPathOffset = pathSegments.indexOf('projects');
+    if (stashPathOffset == -1) {
+      stashPathOffset = pathSegments.indexOf('scm');
+    }
+    stashPathOffset = stashPathOffset > 0 ? stashPathOffset : 0;
+  }
 
   // TODO: This is too spaghetti.. rewrite this to be understandable, separate Bitbucket Server/Bitbucket Cloud paths,
   // SSH/git paths, etc
   if (stashDetected) {
     // Stash mode
-    if (str.indexOf('git@') === -1 && pathSegments[0] !== 'scm') {
+    if (str.indexOf('git@') === -1 && pathSegments[0 + stashPathOffset] !== 'scm') {
 
       if (pathSegments.length > 1) {
-        obj.owner = owner(pathSegments[1]);
+        obj.owner = owner(pathSegments[1 + stashPathOffset]);
       } else {
         obj.owner = null;
       }
 
-      if (pathSegments.length > 3 && pathSegments[2] === 'repos') {
-        obj.name = name(pathSegments[3]);
+      if (pathSegments.length > 3 && pathSegments[2 + stashPathOffset] === 'repos') {
+        obj.name = name(pathSegments[3 + stashPathOffset]);
       } else {
         obj.name = null;
       }
     } else {
-      if (pathSegments.length === 3) {
-        if (pathSegments[0] !== 'scm') {
-          obj.host = pathSegments[0].replace('git@', '');
+      if (pathSegments.length - stashPathOffset === 3) {
+        if (pathSegments[0 + stashPathOffset] !== 'scm') {
+          obj.host = pathSegments[0 + stashPathOffset].replace('git@', '');
         }
-        obj.owner = owner(pathSegments[1]);
-        obj.name = name(pathSegments[2]);
+        obj.owner = owner(pathSegments[1 + stashPathOffset]);
+        obj.name = name(pathSegments[2 + stashPathOffset]);
       } else {
-        obj.owner = owner(pathSegments[0]);
-        obj.name = name(pathSegments[1]);
+        obj.owner = owner(pathSegments[0 + stashPathOffset]);
+        obj.name = name(pathSegments[1 + stashPathOffset]);
       }
     }
   } else {
@@ -82,7 +91,7 @@ function parse(str) {
     obj.name = name(pathSegments[1]);
   }
 
-  if (pathSegments.length > 1 && obj.owner && obj.name) {
+  if (pathSegments.length > 1 + stashPathOffset && obj.owner && obj.name) {
     obj.repo = obj.owner + '/' + obj.name;
   } else {
     var href = obj.href.split(':');
@@ -109,21 +118,21 @@ function parse(str) {
     }
   }
 
-  if (pathSegments.length >= 3) {
+  if (pathSegments.length >= 3 + stashPathOffset) {
     switch(pathSegments[2]){
       case 'get':
         // Look at seg[3] for a file name, which will be the branch/tag name
         // NOTE: tags and branches are treated alike in Bitbucket and cannot be distinguished by URL.
         // We'll treat everything like branches.
         var fileName = null;
-        if (pathSegments[3].endsWith('.tar.gz')) {
-          fileName = pathSegments[3].replace('.tar.gz', '');
+        if (pathSegments[3 + stashPathOffset].endsWith('.tar.gz')) {
+          fileName = pathSegments[3+ stashPathOffset].replace('.tar.gz', '');
         }
-        if (pathSegments[3].endsWith('.tar.bz2')) {
-          fileName = pathSegments[3].replace('.tar.bz2', '');
+        if (pathSegments[3+ stashPathOffset].endsWith('.tar.bz2')) {
+          fileName = pathSegments[3+ stashPathOffset].replace('.tar.bz2', '');
         }
-        if (pathSegments[3].endsWith('.zip')) {
-          fileName = pathSegments[3].replace('.zip', '');
+        if (pathSegments[3+ stashPathOffset].endsWith('.zip')) {
+          fileName = pathSegments[3+ stashPathOffset].replace('.zip', '');
         }
         obj.branch = fileName;
 
@@ -134,11 +143,11 @@ function parse(str) {
         break;
       case 'raw':// support file location. Bitbucket support two file modes:raw and src. This is only for bitbuket and not Bitbucket Server
       case 'src':// todo: support bitbucket server file location
-            if(pathSegments.length < 5){
+            if(pathSegments.length < 5 + stashPathOffset){
                 // no file location
                 break;
             }
-            var filepath = pathSegments.slice(4);
+            var filepath = pathSegments.slice(4 + stashPathOffset);
             if(filepath.length){
                 var file = filepath[filepath.length - 1];
                 file = file.split('?')[0]; //remove the query params
